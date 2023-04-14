@@ -1,5 +1,7 @@
 package org.jboss.pnc.grogu;
 
+import org.jboss.pnc.grogu.repositorycreation.dto.RepositoryCreationRequest;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,7 +20,7 @@ public class RestProcessEndpoint {
     @GET
     @Path("repository-creation")
     @Produces(MediaType.APPLICATION_JSON)
-    public String repositoryCreation() {
+    public String repositoryCreation(RepositoryCreationRequest request) {
         return "yes";
     }
 

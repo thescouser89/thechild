@@ -35,7 +35,5 @@ public class CallbackEndpoint {
             // repeat the old process
         }
 
-
-
     }
 }

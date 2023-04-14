@@ -1,6 +1,5 @@
 package org.jboss.pnc.grogu.model;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Sort;
@@ -22,8 +21,8 @@ import java.util.UUID;
 /**
  * The Job model is used to mostly store the {@link org.jboss.pnc.grogu.util.ProcessState} into the database.
  * <p>
- * It can be converted from ProcessState to Job via the static {@link #newJobFromProcessState} method.
- * It can be converted from Job to ProcessState via the static {@link #toProcessState} method.
+ * It can be converted from ProcessState to Job via the static {@link #newJobFromProcessState} method. It can be
+ * converted from Job to ProcessState via the static {@link #toProcessState} method.
  */
 @Entity
 public class Job extends PanacheEntityBase {
@@ -33,8 +32,7 @@ public class Job extends PanacheEntityBase {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     public UUID id;
 
     /**
@@ -99,14 +97,11 @@ public class Job extends PanacheEntityBase {
      * @return the first job
      */
     public static Optional<Job> getInitJob(String processId) {
-        return find("from Job where processId = ?1 and stage = ?2",
-                processId, "INIT").firstResultOptional();
+        return find("from Job where processId = ?1 and stage = ?2", processId, "INIT").firstResultOptional();
     }
 
     public static Optional<Job> getLatestJob(String processId) {
-        return find("from Job where processId = ?1",
-                Sort.by("created").descending(),
-                processId).firstResultOptional();
+        return find("from Job where processId = ?1", Sort.by("created").descending(), processId).firstResultOptional();
     }
 
     public static Optional<Job> getJobWithUUID(String uuidString) {
@@ -121,8 +116,6 @@ public class Job extends PanacheEntityBase {
      * @return list of jobs
      */
     public List<Job> getJobsWithProcessId(String processId) {
-        return list("from Job where processId = ?!",
-                Sort.by("created").ascending(),
-                processId);
+        return list("from Job where processId = ?!", Sort.by("created").ascending(), processId);
     }
 }

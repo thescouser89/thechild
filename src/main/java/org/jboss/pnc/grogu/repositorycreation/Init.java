@@ -1,5 +1,6 @@
 package org.jboss.pnc.grogu.repositorycreation;
 
+import org.jboss.pnc.grogu.repositorycreation.dto.RepositoryCreationRequest;
 import org.jboss.pnc.grogu.util.ProcessState;
 
 import java.util.Optional;
@@ -7,11 +8,17 @@ import java.util.Optional;
 public class Init implements ProcessState {
 
     String processId;
-    String data;
+    RepositoryCreationRequest data;
 
-    public Init(String processId, String data) {
+    /**
+     * Use the access token from the sender
+     */
+    String accessToken;
+
+    public Init(String processId, RepositoryCreationRequest request, String accessToken) {
         this.processId = processId;
-        this.data = data;
+        this.data = request;
+        this.accessToken = accessToken;
     }
 
     @Override
@@ -20,7 +27,7 @@ public class Init implements ProcessState {
         // store data and process Id
         // do any process
         // decide on next step and return nextState
-        return Optional.empty();
+        return Optional.of(new CreateInternalRepository(processId, data, accessToken));
     }
 
     @Override

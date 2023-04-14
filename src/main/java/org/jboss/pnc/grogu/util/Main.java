@@ -39,7 +39,7 @@ public class Main {
     public static void enqueueMe(UUID uuid) {
         // do nothing
         // jobrunr.enqueue(() -> execute(uuid));
-        //     or
+        // or
         // kafka.send(uuid);
     }
 }
