@@ -13,7 +13,7 @@ public interface ProcessState {
      * @return Optional ProcessState: if empty, there are no next state to move to. If present, we move to that next
      *         state
      */
-    Optional<ProcessState> processAndNextState();
+    Optional<ProcessState> processAndNextState() throws Exception;
 
     /**
      * Do whatever processing needs to be done for this or previous states on knowing we are cancelled

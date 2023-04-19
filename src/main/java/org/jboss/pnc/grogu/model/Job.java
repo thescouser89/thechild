@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.jboss.pnc.grogu.util.ObjectMapperProvider.OBJECT_MAPPER;
+
 /**
  * The Job model is used to mostly store the {@link org.jboss.pnc.grogu.util.ProcessState} into the database.
  * <p>
@@ -26,8 +28,6 @@ import java.util.UUID;
  */
 @Entity
 public class Job extends PanacheEntityBase {
-
-    static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Id
     @Column(name = "id")
