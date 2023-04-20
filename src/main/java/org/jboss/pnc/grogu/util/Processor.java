@@ -2,20 +2,19 @@ package org.jboss.pnc.grogu.util;
 
 import io.quarkus.logging.Log;
 import lombok.Setter;
-import org.jboss.pnc.grogu.model.CancelledProcess;
-import org.jboss.pnc.grogu.model.Job;
+import org.jboss.pnc.grogu.entity.CancelledProcess;
+import org.jboss.pnc.grogu.entity.Job;
 import org.jboss.pnc.grogu.queue.SimpleLinkedBlockingQueue;
 import org.jboss.pnc.grogu.queue.UUIDQueue;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
-public class Executor {
+public class Processor {
 
     // Default queue is SimpleLinkedBlockingQueue. You can replace it with setter and getter.
     @Setter
@@ -58,6 +57,10 @@ public class Executor {
                 enqueue(job.id, calculateDelay(job.retries));
             }
         }
+    }
+
+    public void test(UUID uuid) {
+        Log.info("uuid being processed: " + uuid);
     }
 
     public void enqueue(UUID uuid) {

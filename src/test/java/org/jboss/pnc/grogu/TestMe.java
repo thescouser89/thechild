@@ -6,10 +6,9 @@ import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.pnc.grogu.baby.Init;
-import org.jboss.pnc.grogu.model.Job;
-import org.jboss.pnc.grogu.queue.KafkaQueue;
-import org.jboss.pnc.grogu.queue.SimpleLinkedBlockingQueue;
-import org.jboss.pnc.grogu.util.Executor;
+import org.jboss.pnc.grogu.entity.Job;
+import org.jboss.pnc.grogu.queue.*;
+import org.jboss.pnc.grogu.util.Processor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -24,33 +23,30 @@ import java.util.UUID;
 class TestMe {
 
     @Inject
+    SimpleLinkedBlockingQueue simpleLinkedBlockingQueue;
+
+    @Inject
     KafkaQueue kafkaQueue;
 
     @Inject
-    Executor executor;
+    Processor processor;
+
+    @Inject
+    PostgresQueueWorker postgresQueueExecutor;
+
+    @Inject
+    PostgresQueue postgresQueue;
 
     @Test
-    @TestTransaction
     void firstTestSimpleLinkedBlockingQueue() throws Exception {
 
-        SimpleLinkedBlockingQueue queue = new SimpleLinkedBlockingQueue();
-        executor.setQueue(queue);
-
-        Optional<Job> job2 = Job.getInitJob("1234");
-        Log.info(job2.get().stateClass);
-        executor.enqueue(job2.get().id);
-
-        while(true) {
-            UUID uuid = queue.pop();
-
-            if (uuid == null) {
-                break;
-            }
-            executor.execute(uuid);
-        }
+        Job job = Job.getInitJob("1234").get();
+        processor.setQueue(simpleLinkedBlockingQueue);
+        processor.enqueue(job.id);
+        Thread.sleep(20000);
 
         List<Job> allPersons = Job.listAll();
-        for (Job jobTemp: allPersons) {
+        for (Job jobTemp : allPersons) {
             Log.info(jobTemp.id);
             Log.info(jobTemp.stateClass);
             Log.info(jobTemp.created);
@@ -69,15 +65,34 @@ class TestMe {
     }
 
     @Test
-    @TestTransaction
     void firstTestKafkaQueue() throws Exception {
 
         Job job = Job.getInitJob("1234").get();
-        executor.setQueue(kafkaQueue);
-        executor.enqueue(job.id);
+        processor.setQueue(kafkaQueue);
+        processor.enqueue(job.id);
         Thread.sleep(10000);
         List<Job> allPersons = Job.listAll();
-        for (Job jobTemp: allPersons) {
+        for (Job jobTemp : allPersons) {
+            Log.info(jobTemp.id);
+            Log.info(jobTemp.stateClass);
+            Log.info(jobTemp.created);
+            Log.info(jobTemp.updated);
+            Log.info(jobTemp.retries);
+            Log.info("-----------------");
+        }
+    }
+
+    @Test
+    void firstTestPostgresQueue() throws Exception {
+
+        Job job = Job.getInitJob("1234").get();
+        processor.setQueue(postgresQueue);
+        processor.enqueue(job.id);
+        Log.info("Sleeping");
+        Thread.sleep(20000);
+        Log.info("Done");
+        List<Job> allPersons = Job.listAll();
+        for (Job jobTemp : allPersons) {
             Log.info(jobTemp.id);
             Log.info(jobTemp.stateClass);
             Log.info(jobTemp.created);

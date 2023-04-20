@@ -8,14 +8,14 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.UUID;
 
 /**
- * UUIDQueue implementation using Kafka. We send the uuid into a queue and #{@link org.jboss.pnc.grogu.queue.KafkaExecutor}
- * running in multiple replicas pick up the UUID to process.
+ * UUIDQueue implementation using Kafka. We send the uuid into a queue and
+ * #{@link KafkaWorker} running in multiple replicas pick up the UUID to process.
  */
 @ApplicationScoped
 public class KafkaQueue implements UUIDQueue {
 
     @Inject
-    @Channel("price-create")
+    @Channel("grogu-queue")
     Emitter<UUID> emitter;
 
     @Override

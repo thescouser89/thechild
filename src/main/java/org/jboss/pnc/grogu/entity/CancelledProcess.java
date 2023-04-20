@@ -1,4 +1,4 @@
-package org.jboss.pnc.grogu.model;
+package org.jboss.pnc.grogu.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.annotations.CreationTimestamp;

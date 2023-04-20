@@ -7,7 +7,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import io.quarkus.logging.Log;
-import org.jboss.pnc.grogu.model.Job;
+import org.jboss.pnc.grogu.entity.Job;
 
 import java.util.Optional;
 

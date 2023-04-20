@@ -1,4 +1,4 @@
-package org.jboss.pnc.grogu.model;
+package org.jboss.pnc.grogu.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Sort;
@@ -29,8 +29,7 @@ import static org.jboss.pnc.grogu.util.ObjectMapperProvider.OBJECT_MAPPER;
 public class Job extends PanacheEntityBase {
 
     /**
-     * See: https://stackoverflow.com/a/73635372/2907906
-     * Needs the columnDefinition, otherwise I get weird locking error
+     * See: https://stackoverflow.com/a/73635372/2907906 Needs the columnDefinition, otherwise I get weird locking error
      */
     @Id
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "UUID")
