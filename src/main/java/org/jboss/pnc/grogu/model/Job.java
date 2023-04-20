@@ -1,6 +1,5 @@
 package org.jboss.pnc.grogu.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Sort;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,8 +28,12 @@ import static org.jboss.pnc.grogu.util.ObjectMapperProvider.OBJECT_MAPPER;
 @Entity
 public class Job extends PanacheEntityBase {
 
+    /**
+     * See: https://stackoverflow.com/a/73635372/2907906
+     * Needs the columnDefinition, otherwise I get weird locking error
+     */
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "UUID")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     public UUID id;
@@ -97,7 +100,7 @@ public class Job extends PanacheEntityBase {
      * @return the first job
      */
     public static Optional<Job> getInitJob(String processId) {
-        return find("from Job where processId = ?1 and stage = ?2", processId, "INIT").firstResultOptional();
+        return find("from Job where processId = ?1", Sort.by("created").descending(), processId).firstResultOptional();
     }
 
     public static Optional<Job> getLatestJob(String processId) {

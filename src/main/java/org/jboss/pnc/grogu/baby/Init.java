@@ -9,7 +9,7 @@ public class Init implements ProcessState {
     @Override
     public Optional<ProcessState> processAndNextState() throws Exception {
         Log.info("Init phase");
-        return Optional.empty();
+        return Optional.of(new Next());
     }
 
     @Override
