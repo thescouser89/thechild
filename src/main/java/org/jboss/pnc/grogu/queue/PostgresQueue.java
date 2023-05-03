@@ -17,7 +17,7 @@ public class PostgresQueue implements UUIDQueue {
         postgresQueueEntity.payload = uuid;
         postgresQueueEntity.persist();
         Log.info("-- listing postgres entity");
-        PostgresQueueEntity.<PostgresQueueEntity>listAll().stream().forEach(a -> Log.info(a.payload));
+        PostgresQueueEntity.<PostgresQueueEntity> listAll().stream().forEach(a -> Log.info(a.payload));
         Log.info("-- end listing postgres entity");
     }
 }

@@ -20,8 +20,7 @@ public class SimpleLinkedBlockingWorker {
     @Inject
     SimpleLinkedBlockingQueue simpleLinkedBlockingQueue;
 
-
-    @Scheduled(every="2s")
+    @Scheduled(every = "2s")
     @Transactional
     public void process() throws Exception {
         Log.debug("Running from SimpleLinkedBlockingWorker");

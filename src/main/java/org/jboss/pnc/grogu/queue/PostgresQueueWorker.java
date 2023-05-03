@@ -22,20 +22,15 @@ public class PostgresQueueWorker {
     @Inject
     Processor processor;
 
-    @Scheduled(every="2s")
+    @Scheduled(every = "2s")
     @Transactional
     public void process() throws Exception {
         Log.debug("Running from Postgres worker");
         List<PostgresQueueEntity> list = entityManager
-                .createQuery(
-                        "select p from PostgresQueueEntity p " +
-                                "order by p.created", PostgresQueueEntity.class)
+                .createQuery("select p from PostgresQueueEntity p " + "order by p.created", PostgresQueueEntity.class)
                 .setMaxResults(3)
                 .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-                .setHint(
-                        "javax.persistence.lock.timeout",
-                        LockOptions.SKIP_LOCKED
-                )
+                .setHint("javax.persistence.lock.timeout", LockOptions.SKIP_LOCKED)
                 .getResultList();
 
         if (list != null && list.size() > 0) {
