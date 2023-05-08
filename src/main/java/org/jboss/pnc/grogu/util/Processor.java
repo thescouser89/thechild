@@ -44,19 +44,27 @@ public class Processor {
             Optional<ProcessState> optionalNextState = isCancelled ? state.onCancel() : state.processAndNextState();
 
             if (optionalNextState.isPresent()) {
-                Job nextJob = Job.newJobFromProcessState(job.processId, optionalNextState.get());
-                nextJob.persist();
-                enqueue(nextJob.id);
+                enqueueProcessState(optionalNextState.get(), job.processId);
             }
         } catch (Exception e) {
             // if exception thrown, retry up to a limit
-            job.retries++;
-            Log.info("Retries happening: " + job.retries);
-
-            if (job.retries < MAX_RETRIES) {
-                enqueue(job.id, calculateDelay(job.retries));
-            }
+            retryJob(job);
         }
+    }
+
+    public void retryJob(Job job) {
+        job.retries++;
+        Log.info("Retries happening: " + job.retries);
+
+        if (job.retries < MAX_RETRIES) {
+            enqueue(job.id, calculateDelay(job.retries));
+        }
+    }
+
+    public void enqueueProcessState(ProcessState processState, String processId) throws Exception {
+        Job nextJob = Job.newJobFromProcessState(processId, processState);
+        nextJob.persist();
+        enqueue(nextJob.id);
     }
 
     public void test(UUID uuid) {
@@ -77,4 +85,5 @@ public class Processor {
         double delaySeconds = Math.pow(1.5, retries);
         return Duration.ofSeconds((long) Math.max(delaySeconds, MAX_DELAY_SECONDS));
     }
+
 }

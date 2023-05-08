@@ -7,6 +7,9 @@ import org.jboss.pnc.grogu.util.ProcessState;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * TODO: uses callback
+ */
 public class CloneRepository implements ProcessState {
     String processId;
     RepositoryCreationRequest data;

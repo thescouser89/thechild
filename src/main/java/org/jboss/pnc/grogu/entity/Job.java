@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.jboss.pnc.grogu.util.ProcessState;
+import org.jboss.pnc.grogu.util.ProcessStateWithCallback;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -71,6 +72,17 @@ public class Job extends PanacheEntityBase {
     public ProcessState toProcessState() throws Exception {
         Class<ProcessState> c1 = (Class<ProcessState>) Class.forName(stateClass);
         return (ProcessState) OBJECT_MAPPER.readValue(stateDataJson, c1);
+    }
+
+    public ProcessStateWithCallback toProcessStateWithCallback() throws Exception {
+
+        // can this class be a subtype of ProcessStateWithCallback ?
+        if (Class.forName(stateClass).isAssignableFrom(ProcessStateWithCallback.class)) {
+            Class<ProcessStateWithCallback> c1 = (Class<ProcessStateWithCallback>) Class.forName(stateClass);
+            return (ProcessStateWithCallback) OBJECT_MAPPER.readValue(stateDataJson, c1);
+        } else {
+            throw new Exception("Hell no you can't assign " + stateClass + " to ProcessStateWithCallback");
+        }
     }
 
     /**
