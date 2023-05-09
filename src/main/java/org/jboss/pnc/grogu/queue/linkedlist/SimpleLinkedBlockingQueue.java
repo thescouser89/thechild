@@ -1,8 +1,10 @@
-package org.jboss.pnc.grogu.queue;
+package org.jboss.pnc.grogu.queue.linkedlist;
 
 import io.quarkus.logging.Log;
+import org.jboss.pnc.grogu.queue.UUIDQueue;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.Duration;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -19,6 +21,12 @@ public class SimpleLinkedBlockingQueue implements UUIDQueue {
 
     @Override
     public void enqueue(UUID uuid) {
+        queue.offer(uuid);
+    }
+
+    @Override
+    public void enqueue(UUID uuid, Duration delay) {
+        // TODO: implement
         queue.offer(uuid);
     }
 

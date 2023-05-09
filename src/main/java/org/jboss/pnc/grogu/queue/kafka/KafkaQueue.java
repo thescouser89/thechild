@@ -1,10 +1,12 @@
-package org.jboss.pnc.grogu.queue;
+package org.jboss.pnc.grogu.queue.kafka;
 
 import com.google.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.jboss.pnc.grogu.queue.UUIDQueue;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.Duration;
 import java.util.UUID;
 
 /**
@@ -20,6 +22,12 @@ public class KafkaQueue implements UUIDQueue {
 
     @Override
     public void enqueue(UUID uuid) {
+        emitter.send(uuid);
+    }
+
+    @Override
+    public void enqueue(UUID uuid, Duration delay) {
+        // TODO: implement
         emitter.send(uuid);
     }
 }

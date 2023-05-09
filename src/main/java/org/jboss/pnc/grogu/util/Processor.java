@@ -4,7 +4,7 @@ import io.quarkus.logging.Log;
 import lombok.Setter;
 import org.jboss.pnc.grogu.entity.CancelledProcess;
 import org.jboss.pnc.grogu.entity.Job;
-import org.jboss.pnc.grogu.queue.SimpleLinkedBlockingQueue;
+import org.jboss.pnc.grogu.queue.linkedlist.SimpleLinkedBlockingQueue;
 import org.jboss.pnc.grogu.queue.UUIDQueue;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -13,6 +13,15 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Frontend to the queue implementations and workers. <br />
+ *
+ * After the ProcessState is stored into the database as a Job, the UUID of the job is then 'enqueued' to a queue using
+ * the {@link #enqueue} method. A helper method called {@link #enqueueProcessState} will do the conversion for you.
+ * <br/>
+ *
+ * A queue worker will pop the UUID from the queue, and then call the {@link #execute} method to run the codebase
+ */
 @ApplicationScoped
 public class Processor {
 
@@ -67,23 +76,17 @@ public class Processor {
         enqueue(nextJob.id);
     }
 
-    public void test(UUID uuid) {
-        Log.info("uuid being processed: " + uuid);
-    }
-
     public void enqueue(UUID uuid) {
         // no delays for the enqueue
         enqueue(uuid, Duration.ZERO);
     }
 
-    public void enqueue(UUID uuid, Duration delay) {
-        // TODO: delay not supported haa
-        queue.enqueue(uuid);
+    void enqueue(UUID uuid, Duration delay) {
+        queue.enqueue(uuid, delay);
     }
 
-    public static Duration calculateDelay(int retries) {
+    static Duration calculateDelay(int retries) {
         double delaySeconds = Math.pow(1.5, retries);
         return Duration.ofSeconds((long) Math.max(delaySeconds, MAX_DELAY_SECONDS));
     }
-
 }

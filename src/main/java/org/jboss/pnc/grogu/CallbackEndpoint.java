@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 
 import io.quarkus.logging.Log;
 import org.jboss.pnc.grogu.entity.Job;
-import org.jboss.pnc.grogu.queue.PostgresQueue;
 import org.jboss.pnc.grogu.util.ProcessState;
 import org.jboss.pnc.grogu.util.ProcessStateWithCallback;
 import org.jboss.pnc.grogu.util.Processor;
@@ -33,7 +32,7 @@ public class CallbackEndpoint {
         Log.infof("callback received with id: %s", callbackId);
         // decide if callback successful or not
         boolean success = true;
-        Optional<Job> job = Job.getJobWithUUID(callbackId);
+        Optional<Job> job = Job.getJobWithCallbackId(callbackId);
 
         if (job.isEmpty()) {
             throw new RuntimeException("Got callback for a process that I couldn't find");

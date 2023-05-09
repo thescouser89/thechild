@@ -1,13 +1,15 @@
 package org.jboss.pnc.grogu;
 
 import io.quarkus.logging.Log;
-import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.pnc.grogu.baby.Init;
 import org.jboss.pnc.grogu.entity.Job;
-import org.jboss.pnc.grogu.queue.*;
+import org.jboss.pnc.grogu.queue.kafka.KafkaQueue;
+import org.jboss.pnc.grogu.queue.linkedlist.SimpleLinkedBlockingQueue;
+import org.jboss.pnc.grogu.queue.postgres.PostgresQueue;
+import org.jboss.pnc.grogu.queue.postgres.PostgresQueueWorker;
 import org.jboss.pnc.grogu.util.Processor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,8 +17,6 @@ import org.junit.jupiter.api.Test;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @QuarkusTest
 @QuarkusTestResource(H2DatabaseTestResource.class)

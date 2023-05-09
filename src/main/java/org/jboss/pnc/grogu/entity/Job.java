@@ -62,6 +62,11 @@ public class Job extends PanacheEntityBase {
      */
     public int retries;
 
+    /**
+     * That one is awkward. Not supposed to be set by the maintainer.
+     */
+    public String callbackId;
+
     @CreationTimestamp
     @Column(updatable = false)
     public LocalDateTime created;
@@ -86,7 +91,8 @@ public class Job extends PanacheEntityBase {
     }
 
     /**
-     * Convert a ProcessState into a Job that we can then store in the database
+     * Convert a ProcessState into a Job that we can then store in the database. If a ProcessStateWithCallback is
+     * converted into a Job, the callbackId is also stored
      *
      * @param processId process id of that state
      * @param processState state to save into the database
@@ -100,6 +106,11 @@ public class Job extends PanacheEntityBase {
         job.processId = processId;
         job.stateClass = processState.getClass().getName();
         job.stateDataJson = OBJECT_MAPPER.writeValueAsString(processState);
+
+        if (processState.getClass().isAssignableFrom(ProcessStateWithCallback.class)) {
+            ProcessStateWithCallback processStateWithCallback = (ProcessStateWithCallback) processState;
+            job.callbackId = processStateWithCallback.getCallbackId();
+        }
 
         return job;
     }
@@ -120,6 +131,10 @@ public class Job extends PanacheEntityBase {
 
     public static Optional<Job> getJobWithUUID(String uuidString) {
         return findByIdOptional(UUID.fromString(uuidString));
+    }
+
+    public static Optional<Job> getJobWithCallbackId(String callbackId) {
+        return find("from Job where callbackId = ?1", callbackId).firstResultOptional();
     }
 
     /**

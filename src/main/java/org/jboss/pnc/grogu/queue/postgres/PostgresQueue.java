@@ -1,10 +1,12 @@
-package org.jboss.pnc.grogu.queue;
+package org.jboss.pnc.grogu.queue.postgres;
 
 import io.quarkus.logging.Log;
 import org.jboss.pnc.grogu.entity.PostgresQueueEntity;
+import org.jboss.pnc.grogu.queue.UUIDQueue;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -16,8 +18,12 @@ public class PostgresQueue implements UUIDQueue {
         PostgresQueueEntity postgresQueueEntity = new PostgresQueueEntity();
         postgresQueueEntity.payload = uuid;
         postgresQueueEntity.persist();
-        Log.info("-- listing postgres entity");
-        PostgresQueueEntity.<PostgresQueueEntity> listAll().stream().forEach(a -> Log.info(a.payload));
-        Log.info("-- end listing postgres entity");
+    }
+
+    @Override
+    @Transactional
+    public void enqueue(UUID uuid, Duration delay) {
+        // TODO: implement
+        enqueue(uuid);
     }
 }

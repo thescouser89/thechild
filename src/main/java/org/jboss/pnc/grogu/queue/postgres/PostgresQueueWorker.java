@@ -1,4 +1,4 @@
-package org.jboss.pnc.grogu.queue;
+package org.jboss.pnc.grogu.queue.postgres;
 
 import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;

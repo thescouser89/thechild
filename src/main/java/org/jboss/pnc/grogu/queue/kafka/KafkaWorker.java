@@ -1,4 +1,4 @@
-package org.jboss.pnc.grogu.queue;
+package org.jboss.pnc.grogu.queue.kafka;
 
 import io.quarkus.logging.Log;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
